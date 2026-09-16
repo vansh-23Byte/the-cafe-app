@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Edit item' if item else 'New item' }}{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>{{ 'Edit ' ~ item.name if item else 'Add a menu item' }}</h1>
+    <p>Anything you save here shows on the public menu straight away.</p>
+  </div>
+  <a class="btn btn-ghost" href="{{ url_for('admin_menu') }}">Back to menu</a>
+</div>
+
+<div class="card" style="max-width:640px">
+  <form method="post">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" required value="{{ item.name if item else '' }}">
+    </div>
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" name="description">{{ item.description if item else '' }}</textarea>
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label for="price">Price in rupees</label>
+        <input id="price" name="price" type="number" min="0" step="10" required
+               value="{{ item.price | round | int if item else '' }}">
+      </div>
+      <div class="field">
+        <label for="category_id">Section</label>
+        <select id="category_id" name="category_id">
+          {% for cat in cats %}
+            <option value="{{ cat.id }}" {{ 'selected' if item and item.category_id == cat.id }}>{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="image_url">Photo link (optional)</label>
+      <input id="image_url" name="image_url" type="url" placeholder="https://..."
+             value="{{ item.image_url if item else '' }}">
+    </div>
+    <label class="check">
+      <input type="checkbox" name="available" {{ 'checked' if not item or item.available }}>
+      Show this on the website
+    </label>
+    <label class="check">
+      <input type="checkbox" name="is_special" {{ 'checked' if item and item.is_special }}>
+      Feature it on the home page
+    </label>
+    <button class="btn" type="submit">{{ 'Save changes' if item else 'Add to menu' }}</button>
+  </form>
+</div>
+{% endblock %}

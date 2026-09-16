@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}About — {{ cafe.name }}{% endblock %}
+
+{% block body %}
+<div class="shell band">
+  <h1>A small roastery and bakehouse.</h1>
+  <div class="hero-rule"></div>
+  <p>We opened in 2019 with a second-hand roaster, one oven and a stubborn idea that a
+    neighbourhood cafe should make its own things. That has not changed much. The green
+    coffee comes from three importers we visit, the flour from a mill two hours north,
+    and the plums, when they are good, from a stall at the Sunday market.</p>
+  <p>Everything on the menu is made here except the butter and the milk. If you ask what
+    is in something, whoever is on the bar will actually know.</p>
+</div>
+
+<div class="band band-paper">
+  <div class="shell cols">
+    <div>
+      <h2>Roasting</h2>
+      <p>Tuesdays and Fridays, 6am. The shop smells extraordinary and gets a little smoky.
+        Bags of last week's roast are half price on Monday.</p>
+    </div>
+    <div>
+      <h2>The bake</h2>
+      <p>Doughs are mixed the night before and shaped at five. When a tray is gone it is
+        gone, which is why the croissants disappear by ten.</p>
+    </div>
+    <div>
+      <h2>Working here</h2>
+      <p>We train on bar from scratch, no experience needed. Write to
+        <a href="mailto:{{ cafe.email }}">{{ cafe.email }}</a> and tell us when you can start.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block title %}Inbox{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>Inbox</h1>
+    <p>Messages sent through the contact form.</p>
+  </div>
+</div>
+
+{% for row in rows %}
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <div>
+        <h2 style="margin-bottom:.2rem">{{ row.subject or 'No subject' }}</h2>
+        <p class="small muted" style="margin:0">
+          {{ row.name }} &middot; <a href="mailto:{{ row.email }}">{{ row.email }}</a>
+          &middot; {{ row.created_at | nicedate }}
+        </p>
+      </div>
+      <div class="actions">
+        {% if not row.is_read %}
+          <form method="post" action="{{ url_for('admin_message_read', msg_id=row.id) }}" class="inline">
+            <button class="btn btn-ghost btn-small" type="submit">Mark read</button>
+          </form>
+        {% else %}
+          <span class="badge ready">Read</span>
+        {% endif %}
+        <form method="post" action="{{ url_for('admin_message_delete', msg_id=row.id) }}" class="inline"
+              onsubmit="return confirm('Delete this message?')">
+          <button class="btn btn-danger btn-small" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+    <p style="margin:.9rem 0 0">{{ row.body }}</p>
+  </div>
+{% else %}
+  <div class="card"><p class="empty">The inbox is empty.</p></div>
+{% endfor %}
+{% endblock %}

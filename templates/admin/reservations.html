@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% block title %}Tables{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>Tables</h1>
+    <p>Confirm a booking once you have called the guest back.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Guest</th><th>When</th><th class="right">Guests</th><th>Note</th><th>Requested</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td><strong>{{ row.name }}</strong><div class="small muted">{{ row.phone }}{% if row.email %} &middot; {{ row.email }}{% endif %}</div></td>
+          <td>{{ row.date }}<div class="small muted">{{ row.time }}</div></td>
+          <td class="right num">{{ row.guests }}</td>
+          <td class="small">{{ row.note }}</td>
+          <td class="small muted">{{ row.created_at | nicedate }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin_reservation_status', res_id=row.id) }}">
+              <select class="compact" name="status" onchange="this.form.submit()">
+                {% for value in statuses %}
+                  <option value="{{ value }}" {{ 'selected' if row.status == value }}>{{ value }}</option>
+                {% endfor %}
+              </select>
+              <noscript><button class="btn btn-small" type="submit">Save</button></noscript>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">No table requests yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

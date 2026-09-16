@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ cafe.name }} — coffee, bakes and a quiet table{% endblock %}
+
+{% block body %}
+<section class="hero">
+  <div class="shell hero-grid">
+    <div>
+      <h1>Twelve seats, one roaster, coffee ground the minute you order it.</h1>
+      <div class="hero-rule"></div>
+      <p class="lead">We roast in the back room on Tuesdays, bake before sunrise, and keep
+        the menu short enough to make every part of it properly.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{{ url_for('menu') }}">See the menu</a>
+        <a class="btn btn-ghost" href="{{ url_for('reserve') }}">Book a table</a>
+      </div>
+    </div>
+
+    <aside class="board">
+      <svg class="steam" width="46" height="38" viewBox="0 0 64 52" aria-hidden="true">
+        <g fill="none" stroke="#cfdca8" stroke-width="2.5" stroke-linecap="round">
+          <path d="M18 46c0-8 7-8 7-16s-7-8-7-16"/>
+          <path d="M32 46c0-8 7-8 7-16s-7-8-7-16"/>
+          <path d="M46 46c0-8 7-8 7-16s-7-8-7-16"/>
+        </g>
+      </svg>
+      <h2>On the brew bar today</h2>
+      {% for item in brew %}
+        <div class="board-row">
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.price | money }}</span>
+        </div>
+      {% else %}
+        <p class="board-note">The brew bar list is being updated. Ask at the counter.</p>
+      {% endfor %}
+      <p class="board-note">Ground to order. Decaf is the same price, and we will not judge you.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="band band-paper">
+  <div class="shell">
+    <div class="band-head">
+      <h2>What the kitchen is proud of</h2>
+      <p>Four things worth ordering this week.</p>
+    </div>
+    <div class="specials">
+      {% for item in specials %}
+      <article class="special">
+        <p class="kicker">{{ item.category }}</p>
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+        <div class="special-foot">
+          <span class="price">{{ item.price | money }}</span>
+          <button class="btn btn-small" data-add="{{ item.id }}" data-name="{{ item.name }}"
+                  data-price="{{ item.price }}">Add to basket</button>
+        </div>
+      </article>
+      {% else %}
+        <p>Nothing is marked as a special right now.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell cols">
+    <div>
+      <h2>Order ahead</h2>
+      <p>Build a basket, leave your number, and pick it up at the counter. We start
+        making it when we see the ticket, so allow about ten minutes.</p>
+      <a class="btn btn-ghost" href="{{ url_for('menu') }}">Start an order</a>
+    </div>
+    <div>
+      <h2>Opening hours</h2>
+      {% for label, time in cafe.hours %}
+        <div class="hours-row"><span>{{ label }}</span><span>{{ time }}</span></div>
+      {% endfor %}
+    </div>
+    <div>
+      <h2>Where</h2>
+      <p>{{ cafe.address }}<br>
+        <a href="tel:{{ cafe.phone | replace(' ', '') }}">{{ cafe.phone }}</a></p>
+      <p>Street parking after 10am. The side door is step-free.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found — {{ cafe.name }}{% endblock %}
+{% block body %}
+<div class="shell band">
+  <h1>That page is not on the menu.</h1>
+  <div class="hero-rule"></div>
+  <p>The link may be old, or we may have moved something. The menu is a good place to restart.</p>
+  <a class="btn" href="{{ url_for('menu') }}">See the menu</a>
+</div>
+{% endblock %}

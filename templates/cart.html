@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Your basket — {{ cafe.name }}{% endblock %}
+
+{% block body %}
+<div class="shell band">
+  <h1>Your basket</h1>
+  <div class="hero-rule"></div>
+
+  <div id="receipt" hidden>
+    <div class="receipt">
+      <h2>Order placed</h2>
+      <p style="margin-inline:auto">Show this reference at the counter.</p>
+      <p class="ref" data-ref></p>
+      <p style="margin-inline:auto" data-eta>We will call if anything is unavailable.</p>
+      <a class="btn" href="{{ url_for('menu') }}">Order something else</a>
+    </div>
+  </div>
+
+  <div id="basket-empty" class="empty" hidden>
+    <p>Nothing here yet. The pistachio latte is a good place to start.</p>
+    <a class="btn" href="{{ url_for('menu') }}">Browse the menu</a>
+  </div>
+
+  <div id="basket-live" class="cart-grid" hidden>
+    <div>
+      <div id="lines"></div>
+      <div class="totals"><span>Total</span><strong data-total>&#8377;0</strong></div>
+      <button class="link-quiet" data-clear>Empty the basket</button>
+    </div>
+
+    <form class="form-card" id="checkout" novalidate>
+      <h2 style="margin-bottom:1rem">Your details</h2>
+      <div class="field">
+        <label for="customer">Name</label>
+        <input id="customer" name="customer" type="text" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="tel" required>
+      </div>
+      <div class="field">
+        <label for="fulfilment">Collecting or staying</label>
+        <select id="fulfilment" name="fulfilment">
+          <option value="pickup">Picking it up</option>
+          <option value="dine-in">Eating in</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="note">Notes for the bar</label>
+        <textarea id="note" name="note" placeholder="Oat milk, extra shot, no sugar"></textarea>
+      </div>
+      <p class="flash warn" id="checkout-error" hidden></p>
+      <button class="btn" type="submit">Place order</button>
+      <p class="small" style="color:var(--muted);margin:.8rem 0 0">
+        You pay at the counter when you collect.</p>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %}

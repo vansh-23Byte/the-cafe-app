@@ -1,0 +1,113 @@
+{% extends "admin/base.html" %}
+{% block title %}Overview{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>Today at the counter</h1>
+    <p>Everything the shop has taken in so far.</p>
+  </div>
+  <a class="btn" href="{{ url_for('admin_item_form') }}">Add a menu item</a>
+</div>
+
+<div class="stats">
+  <div class="stat accent">
+    <div class="label">Takings today</div>
+    <div class="value">{{ stats.revenue_today | money }}</div>
+  </div>
+  <div class="stat"><div class="label">Orders today</div><div class="value">{{ stats.orders_today }}</div></div>
+  <div class="stat"><div class="label">Still to make</div><div class="value">{{ stats.open_orders }}</div></div>
+  <div class="stat"><div class="label">Tables to confirm</div><div class="value">{{ stats.pending_tables }}</div></div>
+  <div class="stat"><div class="label">Items live</div><div class="value">{{ stats.items_live }}</div></div>
+  <div class="stat"><div class="label">Unread messages</div><div class="value">{{ stats.unread }}</div></div>
+</div>
+
+<div class="grid-2">
+  <div>
+    <div class="card">
+      <h2>Takings, last seven days</h2>
+      {% set peak = series | map(attribute='value') | max %}
+      <div class="chart">
+        {% for point in series %}
+          <div class="col">
+            <span class="amt">{{ point.value | money }}</span>
+            <div class="bar" style="height: {{ (point.value / peak * 100) if peak else 0 }}%"></div>
+            <span class="day">{{ point.label }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Latest orders</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ref</th><th>Customer</th><th>Placed</th><th class="right">Total</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for order in recent_orders %}
+            <tr>
+              <td><a href="{{ url_for('admin_orders') }}">{{ order.reference }}</a></td>
+              <td>{{ order.customer }}<div class="small muted">{{ order.fulfilment }}</div></td>
+              <td class="small muted">{{ order.created_at | nicedate }}</td>
+              <td class="right num">{{ order.total | money }}</td>
+              <td><span class="badge {{ order.status }}">{{ order.status }}</span></td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" class="empty">No orders yet. They will appear here the moment one is placed.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>Best sellers</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th class="right">Sold</th><th class="right">Revenue</th></tr></thead>
+          <tbody>
+          {% for row in top %}
+            <tr><td>{{ row.item_name }}</td><td class="right num">{{ row.qty }}</td>
+                <td class="right num">{{ row.revenue | money }}</td></tr>
+          {% else %}
+            <tr><td colspan="3" class="empty">Nothing sold yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Next tables</h2>
+      {% for row in upcoming %}
+        <div style="display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line)">
+          <div>
+            <strong>{{ row.name }}</strong>
+            <div class="small muted">{{ row.date }} at {{ row.time }} &middot; {{ row.guests }} guests</div>
+          </div>
+          <span class="badge {{ row.status }}">{{ row.status }}</span>
+        </div>
+      {% else %}
+        <p class="empty">No tables booked. The floor is yours.</p>
+      {% endfor %}
+    </div>
+
+    <div class="card">
+      <h2>Change your password</h2>
+      <form method="post" action="{{ url_for('admin_password') }}">
+        <div class="field">
+          <label for="current">Current password</label>
+          <input id="current" name="current" type="password" required>
+        </div>
+        <div class="field">
+          <label for="new">New password</label>
+          <input id="new" name="new" type="password" required>
+        </div>
+        <button class="btn btn-ghost" type="submit">Change password</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

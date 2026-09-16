@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block title %}Menu{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>Menu</h1>
+    <p>{{ items | length }} items across {{ cats | length }} sections.</p>
+  </div>
+  <a class="btn" href="{{ url_for('admin_item_form') }}">Add a menu item</a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Section</th><th class="right">Price</th><th>On the site</th><th>House pick</th><th class="right">Actions</th></tr>
+      </thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td><strong>{{ item.name }}</strong><div class="small muted">{{ item.description }}</div></td>
+          <td>{{ item.category }}</td>
+          <td class="right num">{{ item.price | money }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin_item_toggle', item_id=item.id) }}" class="inline">
+              <button class="badge {{ 'ready' if item.available else 'cancelled' }}"
+                      style="border:0;cursor:pointer;font:inherit;font-size:.78rem" type="submit">
+                {{ 'Showing' if item.available else 'Hidden' }}
+              </button>
+            </form>
+          </td>
+          <td>{% if item.is_special %}<span class="badge pending">Yes</span>{% else %}<span class="muted small">No</span>{% endif %}</td>
+          <td class="right">
+            <div class="actions" style="justify-content:flex-end">
+              <a class="btn btn-ghost btn-small" href="{{ url_for('admin_item_form', item_id=item.id) }}">Edit</a>
+              <form method="post" action="{{ url_for('admin_item_delete', item_id=item.id) }}" class="inline"
+                    onsubmit="return confirm('Remove {{ item.name }} from the menu?')">
+                <button class="btn btn-danger btn-small" type="submit">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">No items yet. Add the first one to fill the menu page.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

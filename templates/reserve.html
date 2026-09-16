@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Book a table — {{ cafe.name }}{% endblock %}
+
+{% block body %}
+<div class="shell band cart-grid">
+  <div>
+    <h1>Book a table</h1>
+    <div class="hero-rule"></div>
+    <p>We hold four of the twelve seats for walk-ins, so book ahead for weekends.
+      Requests are confirmed by phone, usually within the hour.</p>
+
+    <form class="form-card" method="post" novalidate>
+      <div class="row-2">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email (optional)</label>
+        <input id="email" name="email" type="email">
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" min="{{ min_date }}" max="{{ max_date }}" required>
+        </div>
+        <div class="field">
+          <label for="time">Time</label>
+          <input id="time" name="time" type="time" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="guests">How many of you</label>
+        <input id="guests" name="guests" type="number" min="1" max="20" value="2">
+      </div>
+      <div class="field">
+        <label for="note">Anything we should know</label>
+        <textarea id="note" name="note" placeholder="Allergies, a pram, a birthday cake"></textarea>
+      </div>
+      <button class="btn" type="submit">Request this table</button>
+    </form>
+  </div>
+
+  <aside>
+    <div class="board">
+      <h2>Before you book</h2>
+      <p class="board-note">Tables are held for fifteen minutes past the booked time.</p>
+      <p class="board-note">Groups above eight, please call {{ cafe.phone }} instead so we can
+        move furniture around.</p>
+      <p class="board-note">Dogs are welcome at the two outside tables.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

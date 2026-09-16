@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block title %}Sections{% endblock %}
+
+{% block body %}
+<div class="main-head">
+  <div>
+    <h1>Menu sections</h1>
+    <p>The headings the menu page is grouped by. Lower numbers appear first.</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Current sections</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Section</th><th class="right">Order</th><th class="right">Items</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        {% for row in rows %}
+          <tr>
+            <td><strong>{{ row.name }}</strong><div class="small muted">{{ row.blurb }}</div></td>
+            <td class="right num">{{ row.position }}</td>
+            <td class="right num">{{ row.item_count }}</td>
+            <td class="right">
+              <form method="post" action="{{ url_for('admin_category_delete', cat_id=row.id) }}" class="inline"
+                    onsubmit="return confirm('Deleting {{ row.name }} also deletes its {{ row.item_count }} items. Continue?')">
+                <button class="btn btn-danger btn-small" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4" class="empty">No sections yet. Add one to start building the menu.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Add a section</h2>
+    <form method="post">
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" placeholder="Iced drinks" required>
+      </div>
+      <div class="field">
+        <label for="blurb">One line for the menu page</label>
+        <input id="blurb" name="blurb" type="text" placeholder="Cold, tall and quick.">
+      </div>
+      <div class="field">
+        <label for="position">Where it sits</label>
+        <input id="position" name="position" type="number" min="1" value="5">
+      </div>
+      <button class="btn" type="submit">Add section</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

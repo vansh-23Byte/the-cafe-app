@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Dashboard{% endblock %} — {{ cafe.name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+<div class="admin">
+  <aside class="side">
+    <a class="brand" href="{{ url_for('admin_dashboard') }}">Pistachio <span>&amp;</span> Plum</a>
+    <p class="role">Signed in as {{ session.admin_name }}</p>
+
+    <a class="nav-link {{ 'on' if request.endpoint == 'admin_dashboard' }}" href="{{ url_for('admin_dashboard') }}">Overview</a>
+    <a class="nav-link {{ 'on' if request.endpoint == 'admin_orders' }}" href="{{ url_for('admin_orders') }}">Orders</a>
+    <a class="nav-link {{ 'on' if request.endpoint == 'admin_reservations' }}" href="{{ url_for('admin_reservations') }}">Tables</a>
+    <a class="nav-link {{ 'on' if request.endpoint in ['admin_menu', 'admin_item_form'] }}" href="{{ url_for('admin_menu') }}">Menu</a>
+    <a class="nav-link {{ 'on' if request.endpoint == 'admin_categories' }}" href="{{ url_for('admin_categories') }}">Sections</a>
+    <a class="nav-link {{ 'on' if request.endpoint == 'admin_messages' }}" href="{{ url_for('admin_messages') }}">
+      Inbox {% if unread %}<span class="pill">{{ unread }}</span>{% endif %}
+    </a>
+
+    <div class="spacer"></div>
+    <a class="logout" href="{{ url_for('home') }}">View the site</a>
+    <a class="logout" href="{{ url_for('admin_logout') }}">Sign out</a>
+  </aside>
+
+  <main class="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, text in messages %}
+        <div class="flash {{ 'warn' if category == 'warn' }}">{{ text }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block body %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>
